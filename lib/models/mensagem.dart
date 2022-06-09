@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Mensagem {
-  Icon Foto;
+  IconData Foto;
   String Contato;
   String CorpoMensagem;
 

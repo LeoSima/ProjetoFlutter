@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Contato {
-  Icon Foto;
+  IconData Foto;
   String NomeContato;
   String UltimaMensagem;
 

@@ -10,7 +10,7 @@ void main() => runApp(const FlutterChatApp());
 
 class FlutterChatApp extends StatelessWidget {
   const FlutterChatApp({Key? key}) : super(key: key);
-
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,7 +18,7 @@ class FlutterChatApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: Colors.blueGrey,
       ),
-      home: Chat(),
+      home: ListaContatos(),
       debugShowCheckedModeBanner: false,
     );
   }
