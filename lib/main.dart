@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterchat/pages/contatos_page.dart';
+import 'package:flutterchat/pages/login_page.dart';
 import 'pages/chat_page.dart';
 
 // void main() {
@@ -18,7 +19,7 @@ class FlutterChatApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: Colors.blueGrey,
       ),
-      home: ListaContatos(),
+      home: Login(),
       debugShowCheckedModeBanner: false,
     );
   }
