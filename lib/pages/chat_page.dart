@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutterchat/models/contato.dart';
 import 'package:flutterchat/models/mensagem.dart';
 import 'package:flutterchat/repositories/mensagem_repository.dart';
 
 class Chat extends StatefulWidget {
-  const Chat({Key? key}) : super(key: key);
+  final Contato contato;
+
+  const Chat({Key? key, required this.contato}) : super(key: key);
 
   @override
   State<Chat> createState() => _ChatState();
@@ -19,16 +22,15 @@ class _ChatState extends State<Chat> {
       return AppBar(
         backgroundColor: Colors.grey.shade900,
         titleSpacing: 0.0,
-        leading:
-            IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+        leading: const BackButton(),
         title: Row(
           children: [
             IconButton(
               onPressed: () {},
               icon: const Icon(Icons.account_circle),
             ),
-            const Expanded(
-              child: Text('User'),
+            Expanded(
+              child: Text(widget.contato.NomeContato),
             ),
           ],
         ),

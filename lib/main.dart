@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutterchat/pages/contatos_page.dart';
+import 'package:flutterchat/pages/chat_page.dart';
 import 'package:flutterchat/pages/login_page.dart';
-import 'pages/chat_page.dart';
+import 'package:flutterchat/pages/contatos_page.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -19,7 +19,7 @@ class FlutterChatApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: Colors.blueGrey,
       ),
-      home: Login(),
+      home: const Login(),
       debugShowCheckedModeBanner: false,
     );
   }
