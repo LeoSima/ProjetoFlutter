@@ -1,40 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutterchat/pages/contatos_page.dart';
 import 'package:flutterchat/pages/widgets/textButtonIcon.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class AddContato extends StatefulWidget {
+  const AddContato({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<AddContato> createState() => _AddContatoState();
 }
 
-class _LoginState extends State<Login> {
-  String nick = '';
-  bool isValidNick = false;
+class _AddContatoState extends State<AddContato> {
+  String addNick = '';
+  bool isValidAddNick = false;
 
   bodyImagemPerfil() {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(18.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(35.0),
-        child: nick == ''
+        child: addNick == ''
             ? Builder(builder: (context) {
-                isValidNick = false;
+                isValidAddNick = false;
                 return const Center(
                   child: Text(
-                    'Insira seu nome de usuário do GitHub',
+                    'Insira o nome de usuário do GitHub',
                     style: TextStyle(fontSize: 18),
                   ),
                 );
               })
             : Image.network(
-                'https://github.com/$nick.png',
+                'https://github.com/$addNick.png',
                 width: 360,
                 height: 360,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) {
-                    isValidNick = true;
+                    isValidAddNick = true;
                     return child;
                   }
 
@@ -43,7 +42,7 @@ class _LoginState extends State<Login> {
                   );
                 },
                 errorBuilder: (context, exception, stackTrace) {
-                  isValidNick = false;
+                  isValidAddNick = false;
                   return const Center(
                     child: Text(
                       "Perfil não encontrado.\nVerifique e tente novamente.",
@@ -63,28 +62,28 @@ class _LoginState extends State<Login> {
       child: TextField(
         onChanged: (value) => {
           setState(() {
-            nick = value;
+            addNick = value;
           })
         },
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.black54,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(50.0)),
-          hintText: 'Seu nick do github...',
+          hintText: 'Nick do github...',
         ),
       ),
     );
   }
 
-  bodyLoginButton() {
+  bodyAddButton() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
       child: TextButtonIcon(
-        icon: Icons.login,
-        label: 'Login',
+        icon: Icons.person,
+        label: 'Adicionar',
         onPressed: () {
-          isValidNick
-              ? logar(nick)
+          isValidAddNick
+              ? addUser(addNick)
               : ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     action: SnackBarAction(
@@ -107,21 +106,14 @@ class _LoginState extends State<Login> {
     );
   }
 
-  logar(String user) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ListaContatos(user: user),
-      ),
-    );
-  }
+  addUser(String nick) {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey.shade900,
-        title: const Text('Flutter Chat'),
+        title: const Text('Adicionar contato'),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -129,7 +121,7 @@ class _LoginState extends State<Login> {
             children: [
               bodyImagemPerfil(),
               bodyTextField(),
-              bodyLoginButton(),
+              bodyAddButton(),
             ],
           ),
         ),

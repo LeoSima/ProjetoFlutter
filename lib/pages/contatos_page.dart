@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutterchat/models/contato.dart';
+import 'package:flutterchat/pages/add_page.dart';
 import 'package:flutterchat/pages/chat_page.dart';
 import 'package:flutterchat/pages/login_page.dart';
 import 'package:flutterchat/repositories/contato_repository.dart';
@@ -62,13 +63,11 @@ class _ListaContatosState extends State<ListaContatos>
           }),
         ),
         title: Padding(
-          padding:  const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 16.0),
-          child:  TextField(
+          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 16.0),
+          child: TextField(
             onChanged: (searchVal) => searchContato(searchVal),
             style: const TextStyle(fontSize: 20),
-            decoration: const InputDecoration(
-              hintText: 'Pesquisar'
-            ),
+            decoration: const InputDecoration(hintText: 'Pesquisar'),
           ),
         ),
       );
@@ -203,7 +202,9 @@ class _ListaContatosState extends State<ListaContatos>
             Icons.person_add,
             color: Colors.white,
           ),
-          onPressed: () {},
+          onPressed: () {
+            abrirAddPage();
+          },
         ),
       );
     } else {
@@ -215,7 +216,9 @@ class _ListaContatosState extends State<ListaContatos>
             Icons.delete,
             color: Colors.white,
           ),
-          onPressed: () {},
+          onPressed: () {
+            abrirAddPage();
+          },
         ),
       );
     }
@@ -327,16 +330,25 @@ class _ListaContatosState extends State<ListaContatos>
     }
   }
 
+  abrirAddPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const AddContato(),
+      ),
+    );
+  }
+
   void searchContato(String searchVal) {
     List<Contato> res = [];
 
-    if (searchVal.isEmpty){
+    if (searchVal.isEmpty) {
       res = allContatos;
     } else {
       res = allContatos
-      .where((contato) =>
-        contato.NomeContato.toLowerCase().contains(searchVal.toLowerCase()))
-      .toList();
+          .where((contato) => contato.NomeContato.toLowerCase()
+              .contains(searchVal.toLowerCase()))
+          .toList();
     }
 
     setState(() {
