@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutterchat/pages/contatos_page.dart';
+import 'package:flutterchat/repositories/user_repository.dart';
 import 'package:flutterchat/pages/widgets/textButtonIcon.dart';
 
 class Login extends StatefulWidget {
@@ -10,17 +12,17 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String nick = '';
-  bool isValidNick = false;
+  String username = '';
+  bool isValidUsername = false;
 
   bodyImagemPerfil() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(35.0),
-        child: nick == ''
+        child: username == ''
             ? Builder(builder: (context) {
-                isValidNick = false;
+                isValidUsername = false;
                 return const Center(
                   child: Text(
                     'Insira seu nome de usuário do GitHub',
@@ -29,12 +31,12 @@ class _LoginState extends State<Login> {
                 );
               })
             : Image.network(
-                'https://github.com/$nick.png',
+                'https://github.com/$username.png',
                 width: 360,
                 height: 360,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) {
-                    isValidNick = true;
+                    isValidUsername = true;
                     return child;
                   }
 
@@ -43,7 +45,7 @@ class _LoginState extends State<Login> {
                   );
                 },
                 errorBuilder: (context, exception, stackTrace) {
-                  isValidNick = false;
+                  isValidUsername = false;
                   return const Center(
                     child: Text(
                       "Perfil não encontrado.\nVerifique e tente novamente.",
@@ -63,7 +65,7 @@ class _LoginState extends State<Login> {
       child: TextField(
         onChanged: (value) => {
           setState(() {
-            nick = value;
+            username = value;
           })
         },
         decoration: InputDecoration(
@@ -83,8 +85,8 @@ class _LoginState extends State<Login> {
         icon: Icons.login,
         label: 'Login',
         onPressed: () {
-          isValidNick
-              ? logar(nick)
+          isValidUsername
+              ? logar(username)
               : ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     action: SnackBarAction(
@@ -118,19 +120,22 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey.shade900,
-        title: const Text('Flutter Chat'),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              bodyImagemPerfil(),
-              bodyTextField(),
-              bodyLoginButton(),
-            ],
+    return ChangeNotifierProvider(
+      create: (context) => UsersRepository(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.grey.shade900,
+          title: const Text('Flutter Chat'),
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                bodyImagemPerfil(),
+                bodyTextField(),
+                bodyLoginButton(),
+              ],
+            ),
           ),
         ),
       ),

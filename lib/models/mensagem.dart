@@ -1,13 +1,18 @@
-import 'package:flutter/material.dart';
+import 'package:flutterchat/models/user.dart';
+import 'package:intl/intl.dart';
 
 class Mensagem {
-  IconData Foto;
-  String Contato;
-  String CorpoMensagem;
+  final String corpoMensagem;
+  final User userEscritor;
+  final User userRecebedor;
+  late DateTime dataEnvio = DateTime.now();
+  late String dataFormatada = DateFormat('dMy').format(dataEnvio);
+  late String horaFormatada = DateFormat('Hm').format(dataEnvio);
 
   Mensagem({
-    required this.Foto,
-    required this.Contato,
-    required this.CorpoMensagem,
+    required this.corpoMensagem,
+    required this.userEscritor,
+    required this.userRecebedor,
   });
+
 }

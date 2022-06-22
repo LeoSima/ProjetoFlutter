@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterchat/pages/chat_page.dart';
 import 'package:flutterchat/pages/login_page.dart';
-import 'package:flutterchat/pages/contatos_page.dart';
 
 // void main() {
 //   runApp(const MyApp());

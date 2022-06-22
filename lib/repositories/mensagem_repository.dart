@@ -1,22 +1,33 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
-import '../models/mensagem.dart';
+import 'package:flutterchat/models/user.dart';
+import 'package:flutterchat/models/mensagem.dart';
 
-class MensagemRepository {
-  static List<Mensagem> mensagens = [
-    Mensagem(
-      Foto: Icons.account_circle,
-      Contato: 'User 1',
-      CorpoMensagem: 'Blábláblá',
-    ),
-    Mensagem(
-      Foto: Icons.account_circle,
-      Contato: 'User 2',
-      CorpoMensagem: 'Pipipipopopo',
-    ),
-    Mensagem(
-      Foto: Icons.account_circle,
-      Contato: 'User 2',
-      CorpoMensagem: 'Teste',
-    ),
-  ];
+class MensagemRepository extends ChangeNotifier {
+  final List<Mensagem> _mensagens = [];
+
+  UnmodifiableListView<Mensagem> get lista => UnmodifiableListView(_mensagens);
+
+  saveAll(String corpoMensagem, User userEscritor, User userRecebedor) {
+    Mensagem mensagem = Mensagem(
+      corpoMensagem: corpoMensagem,
+      userEscritor: userEscritor,
+      userRecebedor: userRecebedor,
+    );
+
+    _mensagens.add(mensagem);
+
+    userEscritor.mensagens.add(mensagem);
+    userRecebedor.mensagens.add(mensagem);
+
+    notifyListeners();
+  }
+
+  remove(Mensagem mensagem, User userEscritor, User userRecebedor) {
+    _mensagens.remove(mensagem);
+    userEscritor.mensagens.remove(mensagem);
+    userRecebedor.mensagens.remove(mensagem);
+
+    notifyListeners();
+  }
 }

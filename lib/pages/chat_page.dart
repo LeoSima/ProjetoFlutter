@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterchat/models/contato.dart';
-import 'package:flutterchat/models/mensagem.dart';
-import 'package:flutterchat/repositories/mensagem_repository.dart';
+import 'package:flutterchat/models/mensagem1.dart';
+import 'package:flutterchat/repositories/mensagem1_repository.dart';
 
 class Chat extends StatefulWidget {
   final Contato contato;
@@ -13,9 +13,9 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  final mensagens = MensagemRepository.mensagens;
+  final mensagens = MessageRepository.mensagens;
 
-  List<Mensagem> selecionadas = [];
+  List<Message> selecionadas = [];
 
   appBarMensagens() {
     if (selecionadas.isEmpty) {
