@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutterchat/models/user.dart';
 import 'package:flutterchat/pages/contatos_page.dart';
-import 'package:flutterchat/repositories/user_repository.dart';
 import 'package:flutterchat/pages/widgets/textButtonIcon.dart';
+import 'package:flutterchat/repositories/user_repository.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String username = '';
   bool isValidUsername = false;
+  late UsersRepository users;
 
   bodyImagemPerfil() {
     return Padding(
@@ -85,31 +87,34 @@ class _LoginState extends State<Login> {
         icon: Icons.login,
         label: 'Login',
         onPressed: () {
-          isValidUsername
-              ? logar(username)
-              : ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    action: SnackBarAction(
-                      label: 'Okay',
-                      onPressed: () {},
-                    ),
-                    content: const Text(
-                      'Usuário informado inválido!',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    duration: const Duration(milliseconds: 2500),
-                    backgroundColor: Colors.black54,
+          if (isValidUsername) {
+            users.saveAll(username);
+            logar(users.findUserByUsername(username));
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                action: SnackBarAction(
+                  label: 'Okay',
+                  onPressed: () {},
+                ),
+                content: const Text(
+                  'Usuário informado inválido!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white70,
                   ),
-                );
+                ),
+                duration: const Duration(milliseconds: 2500),
+                backgroundColor: Colors.black54,
+              ),
+            );
+          }
         },
       ),
     );
   }
 
-  logar(String user) {
+  logar(User user) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -120,22 +125,21 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => UsersRepository(),
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.grey.shade900,
-          title: const Text('Flutter Chat'),
-        ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                bodyImagemPerfil(),
-                bodyTextField(),
-                bodyLoginButton(),
-              ],
-            ),
+    users = Provider.of<UsersRepository>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey.shade900,
+        title: const Text('Flutter Chat'),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              bodyImagemPerfil(),
+              bodyTextField(),
+              bodyLoginButton(),
+            ],
           ),
         ),
       ),

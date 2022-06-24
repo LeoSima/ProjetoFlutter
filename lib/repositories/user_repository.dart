@@ -25,7 +25,7 @@ class UsersRepository extends ChangeNotifier {
 
     saveAll(contactUsername);
 
-    User contact = _users.firstWhere((x) => x.username == contactUsername);
+    User contact = findUserByUsername(contactUsername);
 
     for (User contactUser in user.contatos) {
       if (contactUser.username == contactUsername) {
@@ -34,7 +34,10 @@ class UsersRepository extends ChangeNotifier {
       }
     }
 
-    if (!hasContact) user.contatos.add(contact);
+    if (!hasContact) {
+      user.contatos.add(contact);
+      contact.contatos.add(user);
+    }
 
     return !hasContact;
   }
@@ -42,5 +45,10 @@ class UsersRepository extends ChangeNotifier {
   removeContact(User user, User contact) {
     user.contatos.remove(contact);
     notifyListeners();
+  }
+
+  findUserByUsername(String username) {
+    User user = _users.firstWhere((user) => username == user.username);
+    return user;
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutterchat/models/user.dart';
 import 'package:flutterchat/pages/widgets/textButtonIcon.dart';
 
 class AddContato extends StatefulWidget {
-  const AddContato({Key? key}) : super(key: key);
+  final User user;
+
+  const AddContato({Key? key, required this.user}) : super(key: key);
 
   @override
   State<AddContato> createState() => _AddContatoState();

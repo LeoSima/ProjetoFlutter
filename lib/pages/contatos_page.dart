@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutterchat/models/contato.dart';
+import 'package:flutterchat/models/user.dart';
 import 'package:flutterchat/pages/add_page.dart';
 import 'package:flutterchat/pages/chat_page.dart';
 import 'package:flutterchat/pages/login_page.dart';
-import 'package:flutterchat/repositories/contato_repository.dart';
 
 enum Menu { item1 }
 
 class ListaContatos extends StatefulWidget {
-  final String user;
+  final User user;
 
   const ListaContatos({Key? key, required this.user}) : super(key: key);
 
@@ -17,10 +16,9 @@ class ListaContatos extends StatefulWidget {
   State<ListaContatos> createState() => _ListaContatosState();
 }
 
-class _ListaContatosState extends State<ListaContatos>
-    with TickerProviderStateMixin {
-  final List<Contato> allContatos = ContatoRepository.contatos;
-  List<Contato> contatos = [];
+class _ListaContatosState extends State<ListaContatos> with TickerProviderStateMixin {
+  late List<User> allContatos = widget.user.contatos;
+  List<User> contatos = [];
   bool showFAB = true;
   bool isSearching = false;
 
@@ -47,7 +45,7 @@ class _ListaContatosState extends State<ListaContatos>
     _animation.dispose();
   }
 
-  List<Contato> selecionados = [];
+  List<User> selecionados = [];
 
   appBarContatos() {
     if (isSearching) {
@@ -141,24 +139,24 @@ class _ListaContatosState extends State<ListaContatos>
                 )
               : SizedBox(
                   width: 50,
-                  child: Icon(contatos[contato].Foto),
+                  child: Image.network(contatos[contato].urlImagemPerfil),
                 ),
           title: Text(
-            contatos[contato].NomeContato,
+            contatos[contato].username,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
           ),
-          subtitle: Text(
-            contatos[contato].UltimaMensagem,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
-              color: Colors.white70,
-            ),
-          ),
+          // subtitle: Text(
+          //   contatos[contato].UltimaMensagem,
+          //   style: const TextStyle(
+          //     fontSize: 16,
+          //     fontWeight: FontWeight.normal,
+          //     color: Colors.white70,
+          //   ),
+          // ),
           selected: selecionados.contains(contatos[contato]),
           selectedTileColor: Colors.indigo.shade200,
           onTap: () {
@@ -224,11 +222,11 @@ class _ListaContatosState extends State<ListaContatos>
     }
   }
 
-  abrirConversa(Contato contato) {
+  abrirConversa(User contato) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => Chat(contato: contato),
+        builder: (_) => Chat(user: widget.user,contato: contato),
       ),
     );
   }
@@ -334,19 +332,19 @@ class _ListaContatosState extends State<ListaContatos>
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const AddContato(),
+        builder: (_) => AddContato(user: widget.user),
       ),
     );
   }
 
   void searchContato(String searchVal) {
-    List<Contato> res = [];
+    List<User> res = [];
 
     if (searchVal.isEmpty) {
       res = allContatos;
     } else {
       res = allContatos
-          .where((contato) => contato.NomeContato.toLowerCase()
+          .where((contato) => contato.username.toLowerCase()
               .contains(searchVal.toLowerCase()))
           .toList();
     }

@@ -30,4 +30,20 @@ class MensagemRepository extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  montaChat(User userAtivo, User contato) {
+    List<Mensagem> mensagens = _mensagens
+        .where((mensagem) =>
+            mensagem.userEscritor == userAtivo ||
+            mensagem.userRecebedor == contato)
+        .toList();
+
+    mensagens.sort((a, b) {
+      if (a.dataEnvio.compareTo(b.dataEnvio) < 0) return -1;
+      if (a.dataEnvio.compareTo(b.dataEnvio) > 0) return 1;
+      return 0;
+    });
+
+    return mensagens;
+  }
 }
