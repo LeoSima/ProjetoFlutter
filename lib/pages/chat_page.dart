@@ -21,6 +21,8 @@ class _ChatState extends State<Chat> {
 
   List<Mensagem> selecionadas = [];
 
+  final textFieldController = TextEditingController();
+
   appBarMensagens() {
     if (selecionadas.isEmpty) {
       return AppBar(
@@ -29,9 +31,15 @@ class _ChatState extends State<Chat> {
         leading: const BackButton(),
         title: Row(
           children: [
-            SizedBox(
-              width: 60,
-              child: Image.network(widget.contato.urlImagemPerfil),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 16.0, 0.0),
+              child: SizedBox(
+                width: 35,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.network(widget.contato.urlImagemPerfil),
+                ),
+              ),
             ),
             Expanded(
               child: Text(widget.contato.username),
@@ -98,8 +106,11 @@ class _ChatState extends State<Chat> {
           child: ListTile(
             leading: SizedBox(
               width: 40,
-              child: Image.network(
-                  mensagensChat[mensagem].userEscritor.urlImagemPerfil),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                    mensagensChat[mensagem].userEscritor.urlImagemPerfil),
+              ),
             ),
             title: Text(
               mensagensChat[mensagem].userEscritor.username,
@@ -160,6 +171,7 @@ class _ChatState extends State<Chat> {
 
   textFieldMensagem() {
     return TextField(
+      controller: textFieldController,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.black54,
@@ -174,7 +186,11 @@ class _ChatState extends State<Chat> {
               icon: const Icon(Icons.emoji_emotions),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                allMensagens.saveAll(
+                    textFieldController.text, widget.user, widget.contato);
+                textFieldController.clear();
+              },
               icon: const Icon(Icons.send),
             ),
           ],
@@ -185,7 +201,8 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
-    allMensagens = Provider.of<MensagemRepository>(context);
+    // allMensagens = Provider.of<MensagemRepository>(context);
+    allMensagens = context.watch<MensagemRepository>();
     mensagensChat = allMensagens.montaChat(widget.user, widget.contato);
 
     return Scaffold(

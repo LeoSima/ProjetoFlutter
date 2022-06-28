@@ -18,6 +18,7 @@ class UsersRepository extends ChangeNotifier {
     }
 
     if (!hasUser) _users.add(User(username: username));
+    notifyListeners();
   }
 
   saveNewContact(User user, String contactUsername) {
@@ -39,11 +40,13 @@ class UsersRepository extends ChangeNotifier {
       contact.contatos.add(user);
     }
 
+    notifyListeners();
     return !hasContact;
   }
 
   removeContact(User user, User contact) {
     user.contatos.remove(contact);
+    contact.contatos.remove(user);
     notifyListeners();
   }
 

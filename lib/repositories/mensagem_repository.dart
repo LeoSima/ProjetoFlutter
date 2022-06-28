@@ -34,8 +34,10 @@ class MensagemRepository extends ChangeNotifier {
   montaChat(User userAtivo, User contato) {
     List<Mensagem> mensagens = _mensagens
         .where((mensagem) =>
-            mensagem.userEscritor == userAtivo ||
-            mensagem.userRecebedor == contato)
+            (mensagem.userEscritor == userAtivo &&
+                mensagem.userRecebedor == contato) ||
+            (mensagem.userEscritor == contato &&
+                mensagem.userRecebedor == userAtivo))
         .toList();
 
     mensagens.sort((a, b) {

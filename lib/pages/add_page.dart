@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutterchat/models/user.dart';
 import 'package:flutterchat/pages/widgets/textButtonIcon.dart';
+import 'package:flutterchat/repositories/user_repository.dart';
 
 class AddContato extends StatefulWidget {
   final User user;
@@ -14,6 +16,7 @@ class AddContato extends StatefulWidget {
 class _AddContatoState extends State<AddContato> {
   String addNick = '';
   bool isValidAddNick = false;
+  late UsersRepository users;
 
   bodyImagemPerfil() {
     return Padding(
@@ -85,34 +88,55 @@ class _AddContatoState extends State<AddContato> {
         icon: Icons.person,
         label: 'Adicionar',
         onPressed: () {
-          isValidAddNick
-              ? addUser(addNick)
-              : ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    action: SnackBarAction(
-                      label: 'Okay',
-                      onPressed: () {},
-                    ),
-                    content: const Text(
-                      'Usuário informado inválido!',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white70,
+          if (isValidAddNick) {
+            var hasAdded = users.saveNewContact(widget.user, addNick);
+            hasAdded
+                ? Navigator.pop(context)
+                : ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      action: SnackBarAction(
+                        label: 'Okay',
+                        onPressed: () {},
                       ),
+                      content: const Text(
+                        'O usuário já está na sua lista de contatos',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      duration: const Duration(milliseconds: 2500),
+                      backgroundColor: Colors.black54,
                     ),
-                    duration: const Duration(milliseconds: 2500),
-                    backgroundColor: Colors.black54,
+                  );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                action: SnackBarAction(
+                  label: 'Okay',
+                  onPressed: () {},
+                ),
+                content: const Text(
+                  'Usuário informado inválido!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white70,
                   ),
-                );
+                ),
+                duration: const Duration(milliseconds: 2500),
+                backgroundColor: Colors.black54,
+              ),
+            );
+          }
         },
       ),
     );
   }
 
-  addUser(String nick) {}
-
   @override
   Widget build(BuildContext context) {
+    users = Provider.of<UsersRepository>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey.shade900,

@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutterchat/repositories/mensagem_repository.dart';
 import 'package:provider/provider.dart';

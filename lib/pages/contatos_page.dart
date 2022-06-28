@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import 'package:flutterchat/models/user.dart';
 import 'package:flutterchat/pages/add_page.dart';
 import 'package:flutterchat/pages/chat_page.dart';
 import 'package:flutterchat/pages/login_page.dart';
+import 'package:flutterchat/repositories/user_repository.dart';
 
 enum Menu { item1 }
 
@@ -16,7 +18,9 @@ class ListaContatos extends StatefulWidget {
   State<ListaContatos> createState() => _ListaContatosState();
 }
 
-class _ListaContatosState extends State<ListaContatos> with TickerProviderStateMixin {
+class _ListaContatosState extends State<ListaContatos>
+    with TickerProviderStateMixin {
+  late UsersRepository users;
   late List<User> allContatos = widget.user.contatos;
   List<User> contatos = [];
   bool showFAB = true;
@@ -128,56 +132,65 @@ class _ListaContatosState extends State<ListaContatos> with TickerProviderStateM
   listViewContatos() {
     return ListView.separated(
       itemBuilder: (BuildContext context, int contato) {
-        return ListTile(
-          leading: selecionados.contains(contatos[contato])
-              ? const CircleAvatar(
-                  backgroundColor: Colors.green,
-                  child: Icon(
-                    Icons.check,
+        return contatos.isEmpty
+            ? const ListTile(
+                leading: Icon(Icons.no_accounts),
+                title: Text('Ainda não há contatos adicionados'),
+              )
+            : ListTile(
+                leading: selecionados.contains(contatos[contato])
+                    ? const CircleAvatar(
+                        backgroundColor: Colors.green,
+                        child: Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
+                      )
+                    : SizedBox(
+                        width: 50,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24.0),
+                          child:
+                              Image.network(contatos[contato].urlImagemPerfil),
+                        ),
+                      ),
+                title: Text(
+                  contatos[contato].username,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
-                )
-              : SizedBox(
-                  width: 50,
-                  child: Image.network(contatos[contato].urlImagemPerfil),
                 ),
-          title: Text(
-            contatos[contato].username,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-          ),
-          // subtitle: Text(
-          //   contatos[contato].UltimaMensagem,
-          //   style: const TextStyle(
-          //     fontSize: 16,
-          //     fontWeight: FontWeight.normal,
-          //     color: Colors.white70,
-          //   ),
-          // ),
-          selected: selecionados.contains(contatos[contato]),
-          selectedTileColor: Colors.indigo.shade200,
-          onTap: () {
-            if (selecionados.isNotEmpty) {
-              setState(() {
-                selecionados.contains(contatos[contato])
-                    ? selecionados.remove(contatos[contato])
-                    : selecionados.add(contatos[contato]);
-              });
-            } else {
-              abrirConversa(contatos[contato]);
-            }
-          },
-          onLongPress: () {
-            setState(() {
-              selecionados.contains(contatos[contato])
-                  ? selecionados.remove(contatos[contato])
-                  : selecionados.add(contatos[contato]);
-            });
-          },
-        );
+                // subtitle: Text(
+                //   contatos[contato].UltimaMensagem,
+                //   style: const TextStyle(
+                //     fontSize: 16,
+                //     fontWeight: FontWeight.normal,
+                //     color: Colors.white70,
+                //   ),
+                // ),
+                selected: selecionados.contains(contatos[contato]),
+                selectedTileColor: Colors.indigo.shade200,
+                onTap: () {
+                  if (selecionados.isNotEmpty) {
+                    setState(() {
+                      selecionados.contains(contatos[contato])
+                          ? selecionados.remove(contatos[contato])
+                          : selecionados.add(contatos[contato]);
+                    });
+                  } else {
+                    abrirConversa(contatos[contato]);
+                  }
+                },
+                onLongPress: () {
+                  setState(() {
+                    selecionados.contains(contatos[contato])
+                        ? selecionados.remove(contatos[contato])
+                        : selecionados.add(contatos[contato]);
+                  });
+                },
+              );
       },
       separatorBuilder: (_, ___) => Divider(
         color: Colors.grey.shade900,
@@ -214,9 +227,7 @@ class _ListaContatosState extends State<ListaContatos> with TickerProviderStateM
             Icons.delete,
             color: Colors.white,
           ),
-          onPressed: () {
-            abrirAddPage();
-          },
+          onPressed: () {},
         ),
       );
     }
@@ -226,7 +237,7 @@ class _ListaContatosState extends State<ListaContatos> with TickerProviderStateM
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => Chat(user: widget.user,contato: contato),
+        builder: (_) => Chat(user: widget.user, contato: contato),
       ),
     );
   }
@@ -344,8 +355,8 @@ class _ListaContatosState extends State<ListaContatos> with TickerProviderStateM
       res = allContatos;
     } else {
       res = allContatos
-          .where((contato) => contato.username.toLowerCase()
-              .contains(searchVal.toLowerCase()))
+          .where((contato) =>
+              contato.username.toLowerCase().contains(searchVal.toLowerCase()))
           .toList();
     }
 
@@ -356,6 +367,8 @@ class _ListaContatosState extends State<ListaContatos> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    users = context.watch<UsersRepository>();
+
     return Scaffold(
       appBar: appBarContatos(),
       body: bodyContatosPage(),
