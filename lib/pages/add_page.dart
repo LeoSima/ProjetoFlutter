@@ -89,26 +89,46 @@ class _AddContatoState extends State<AddContato> {
         label: 'Adicionar',
         onPressed: () {
           if (isValidAddNick) {
-            var hasAdded = users.saveNewContact(widget.user, addNick);
-            hasAdded
-                ? Navigator.pop(context)
-                : ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      action: SnackBarAction(
-                        label: 'Okay',
-                        onPressed: () {},
-                      ),
-                      content: const Text(
-                        'O usuário já está na sua lista de contatos',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white70,
+            if (widget.user.username.toLowerCase() != addNick.toLowerCase()) {
+              var hasAdded = users.saveNewContact(widget.user, addNick);
+              hasAdded
+                  ? Navigator.pop(context)
+                  : ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        action: SnackBarAction(
+                          label: 'Okay',
+                          onPressed: () {},
                         ),
+                        content: const Text(
+                          'O usuário já está na sua lista de contatos',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        duration: const Duration(milliseconds: 2500),
+                        backgroundColor: Colors.black54,
                       ),
-                      duration: const Duration(milliseconds: 2500),
-                      backgroundColor: Colors.black54,
+                    );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  action: SnackBarAction(
+                    label: 'Okay',
+                    onPressed: () {},
+                  ),
+                  content: const Text(
+                    'Você não pode se adicionar como contato',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white70,
                     ),
-                  );
+                  ),
+                  duration: const Duration(milliseconds: 2500),
+                  backgroundColor: Colors.black54,
+                ),
+              );
+            }
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

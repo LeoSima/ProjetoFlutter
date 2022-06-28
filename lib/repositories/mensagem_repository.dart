@@ -23,10 +23,12 @@ class MensagemRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  remove(Mensagem mensagem, User userEscritor, User userRecebedor) {
-    _mensagens.remove(mensagem);
-    userEscritor.mensagens.remove(mensagem);
-    userRecebedor.mensagens.remove(mensagem);
+  remove(List<Mensagem> mensagens, User userEscritor, User userRecebedor) {
+    for (Mensagem mensagem in mensagens) {
+      userEscritor.mensagens.remove(mensagem);
+      userRecebedor.mensagens.remove(mensagem);
+      _mensagens.remove(mensagem);
+    }
 
     notifyListeners();
   }

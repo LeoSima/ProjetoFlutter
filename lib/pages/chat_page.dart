@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutterchat/models/user.dart';
@@ -69,7 +70,12 @@ class _ChatState extends State<Chat> {
         title: Text('${selecionadas.length} selecionada(s)'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              allMensagens.remove(selecionadas, widget.user, widget.contato);
+              setState(() {
+                selecionadas = [];
+              });
+            },
             icon: const Icon(Icons.delete),
           ),
         ],
@@ -100,6 +106,7 @@ class _ChatState extends State<Chat> {
 
   listViewMensagens() {
     return ListView.separated(
+      dragStartBehavior: DragStartBehavior.down,
       itemBuilder: (BuildContext context, int mensagem) {
         return Card(
           margin: const EdgeInsets.all(0.0),
@@ -129,8 +136,7 @@ class _ChatState extends State<Chat> {
               ),
             ),
             trailing: Text(
-              mensagensChat[mensagem].dataFormatada +
-                  mensagensChat[mensagem].horaFormatada,
+              mensagensChat[mensagem].dataFormatada,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w300,

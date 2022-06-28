@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -135,7 +136,14 @@ class _ListaContatosState extends State<ListaContatos>
         return contatos.isEmpty
             ? const ListTile(
                 leading: Icon(Icons.no_accounts),
-                title: Text('Ainda não há contatos adicionados'),
+                title: Text(
+                  'Ainda não há contatos adicionados',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
               )
             : ListTile(
                 leading: selecionados.contains(contatos[contato])
@@ -147,7 +155,7 @@ class _ListaContatosState extends State<ListaContatos>
                         ),
                       )
                     : SizedBox(
-                        width: 50,
+                        width: 40,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(24.0),
                           child:
@@ -162,14 +170,6 @@ class _ListaContatosState extends State<ListaContatos>
                     color: Colors.white,
                   ),
                 ),
-                // subtitle: Text(
-                //   contatos[contato].UltimaMensagem,
-                //   style: const TextStyle(
-                //     fontSize: 16,
-                //     fontWeight: FontWeight.normal,
-                //     color: Colors.white70,
-                //   ),
-                // ),
                 selected: selecionados.contains(contatos[contato]),
                 selectedTileColor: Colors.indigo.shade200,
                 onTap: () {
@@ -194,9 +194,9 @@ class _ListaContatosState extends State<ListaContatos>
       },
       separatorBuilder: (_, ___) => Divider(
         color: Colors.grey.shade900,
-        thickness: 1.5,
+        thickness: 2.25,
         height: 0.0,
-        indent: 0.0,
+        indent: 2.0,
         endIndent: 0.0,
       ),
       itemCount: contatos.length,
@@ -227,7 +227,12 @@ class _ListaContatosState extends State<ListaContatos>
             Icons.delete,
             color: Colors.white,
           ),
-          onPressed: () {},
+          onPressed: () {
+            users.removeContact(widget.user, selecionados);
+            setState(() {
+              selecionados = [];
+            });
+          },
         ),
       );
     }

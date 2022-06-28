@@ -11,7 +11,7 @@ class UsersRepository extends ChangeNotifier {
     bool hasUser = false;
 
     for (User user in _users) {
-      if (user.username == username) {
+      if (user.username.toLowerCase() == username.toLowerCase()) {
         hasUser = true;
         break;
       }
@@ -29,7 +29,7 @@ class UsersRepository extends ChangeNotifier {
     User contact = findUserByUsername(contactUsername);
 
     for (User contactUser in user.contatos) {
-      if (contactUser.username == contactUsername) {
+      if (contactUser.username.toLowerCase() == contactUsername.toLowerCase()) {
         hasContact = true;
         break;
       }
@@ -44,14 +44,16 @@ class UsersRepository extends ChangeNotifier {
     return !hasContact;
   }
 
-  removeContact(User user, User contact) {
-    user.contatos.remove(contact);
-    contact.contatos.remove(user);
+  removeContact(User user, List<User> contacts) {
+    for (User contact in contacts) {
+      user.contatos.remove(contact);
+      contact.contatos.remove(user);
+    }
     notifyListeners();
   }
 
   findUserByUsername(String username) {
-    User user = _users.firstWhere((user) => username == user.username);
+    User user = _users.firstWhere((user) => username.toLowerCase() == user.username.toLowerCase());
     return user;
   }
 }
