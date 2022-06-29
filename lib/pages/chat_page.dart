@@ -139,7 +139,7 @@ class _ChatState extends State<Chat> {
               mensagensChat[mensagem].dataFormatada,
               style: const TextStyle(
                 fontSize: 14,
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w500,
                 color: Colors.white70,
               ),
             ),
