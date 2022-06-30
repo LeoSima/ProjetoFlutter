@@ -4,6 +4,31 @@ import 'package:flutterchat/models/user.dart';
 
 class UsersRepository extends ChangeNotifier {
   final List<User> _users = [];
+  late FirebaseFirestore db;
+
+  UsersRepository() {
+    _startRepository();
+  }
+
+  _startRepository() async {
+    await _startFirestore();
+    await _readUsers();
+  }
+
+  _startFirestore() {
+    db = DBFirestore.get();
+  }
+
+  _readUsers() async{
+    if(_mensagens.isEmpty) {
+      final snapshot = await db.collection('users').get();
+      snapshot.docs.forEach((doc) {
+        User user = UsersRepository.tabela.firstWhere((user) => user.username == doc.get('username'));
+        _users.add(user);
+        notifyListeners();
+      })
+    }
+  }
 
   UnmodifiableListView<User> get lista => UnmodifiableListView(_users);
 
@@ -17,7 +42,17 @@ class UsersRepository extends ChangeNotifier {
       }
     }
 
-    if (!hasUser) _users.add(User(username: username));
+    if (!hasUser) async{
+      _users.add(User(username: username));
+      User newUser = findUserByUsername(username);
+
+      await db.collection('users')
+      .doc(newUser.username)
+      .set({
+        'username': newUser.username,
+        'urlImagemPerfil': newUser.urlImagemPerfil
+      })
+    }
     notifyListeners();
   }
 
