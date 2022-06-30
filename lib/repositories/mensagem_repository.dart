@@ -5,33 +5,10 @@ import 'package:flutterchat/models/mensagem.dart';
 
 class MensagemRepository extends ChangeNotifier {
   final List<Mensagem> _mensagens = [];
-  late FirebaseFirestore db;
-
-  MensagemRepository() {
-    _startRepository();
-  }
-
-  _startRepository() async {
-    await _startFirestore();
-    await _readFavoritas();
-  }
-
-  _startFirestore() {
-    db = DBFirestore.get();
-  }
-
-  _readFavoritas() async{
-    if(_mensagens.isEmpty) {
-      final snapshot = await db.collection('mensagens').get();
-      snapshot.docs.forEach((doc) {
-        //Montar mensagem.id
-      })
-    }
-  }
 
   UnmodifiableListView<Mensagem> get lista => UnmodifiableListView(_mensagens);
 
-  saveAll(String corpoMensagem, User userEscritor, User userRecebedor) async{
+  saveAll(String corpoMensagem, User userEscritor, User userRecebedor) {
     Mensagem mensagem = Mensagem(
       corpoMensagem: corpoMensagem,
       userEscritor: userEscritor,
@@ -39,17 +16,9 @@ class MensagemRepository extends ChangeNotifier {
     );
 
     _mensagens.add(mensagem);
+
     userEscritor.mensagens.add(mensagem);
     userRecebedor.mensagens.add(mensagem);
-
-    await db.collection('mensagens')
-    .doc()
-    .set({
-      'corpoMensagem': mensagem.corpoMensagem,
-      'userEscritor': mensagem.userEscritor,
-      'usereRecebedor': mensagem.usereRecebedor,
-      'dataEnvio': mensagem.dataEnvio
-    })
 
     notifyListeners();
   }
